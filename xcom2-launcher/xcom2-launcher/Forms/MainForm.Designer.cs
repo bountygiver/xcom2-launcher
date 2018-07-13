@@ -49,6 +49,7 @@
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importActiveModsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanModsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resubscribeToModsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runXCOM2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.error_provider = new System.Windows.Forms.ErrorProvider(this.components);
             this.main_tabcontrol = new System.Windows.Forms.TabControl();
@@ -56,8 +57,10 @@
             this.horizontal_splitcontainer = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.modlist_ListObjectListView = new BrightIdeasSoftware.ObjectListView();
+            this.olvcActive = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvcName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvcID = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvcCategory = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvcState = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvcOrder = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvcSize = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -68,6 +71,7 @@
             this.olvcHasBackup = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvcWorkshopID = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvcHidden = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvcTags = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvSteamLink = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvBrowserLink = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.panel2 = new System.Windows.Forms.Panel();
@@ -129,6 +133,7 @@
             this.olvcSavedIni = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.fillPanel = new System.Windows.Forms.Panel();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.runWarOfTheChosenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.main_statusstrip.SuspendLayout();
             this.main_menustrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.error_provider)).BeginInit();
@@ -167,7 +172,7 @@
             this.main_statusstrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.status_toolstrip_label,
             this.progress_toolstrip_progressbar});
-            this.main_statusstrip.Location = new System.Drawing.Point(0, 740);
+            this.main_statusstrip.Location = new System.Drawing.Point(0, 719);
             this.main_statusstrip.Name = "main_statusstrip";
             this.main_statusstrip.Size = new System.Drawing.Size(984, 22);
             this.main_statusstrip.TabIndex = 5;
@@ -189,7 +194,8 @@
             this.runToolStripMenuItem,
             this.settingsToolStripMenuItem,
             this.toolsToolStripMenuItem,
-            this.runXCOM2ToolStripMenuItem});
+            this.runXCOM2ToolStripMenuItem,
+            this.runWarOfTheChosenToolStripMenuItem});
             this.main_menustrip.Location = new System.Drawing.Point(0, 0);
             this.main_menustrip.Name = "main_menustrip";
             this.main_menustrip.Size = new System.Drawing.Size(984, 24);
@@ -283,22 +289,29 @@
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.importActiveModsToolStripMenuItem,
-            this.cleanModsToolStripMenuItem});
+            this.cleanModsToolStripMenuItem,
+            this.resubscribeToModsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // importActiveModsToolStripMenuItem
             // 
             this.importActiveModsToolStripMenuItem.Name = "importActiveModsToolStripMenuItem";
-            this.importActiveModsToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.importActiveModsToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.importActiveModsToolStripMenuItem.Text = "Import active mods";
             // 
             // cleanModsToolStripMenuItem
             // 
             this.cleanModsToolStripMenuItem.Name = "cleanModsToolStripMenuItem";
-            this.cleanModsToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.cleanModsToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.cleanModsToolStripMenuItem.Text = "Clean mods";
+            // 
+            // resubscribeToModsToolStripMenuItem
+            // 
+            this.resubscribeToModsToolStripMenuItem.Name = "resubscribeToModsToolStripMenuItem";
+            this.resubscribeToModsToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.resubscribeToModsToolStripMenuItem.Text = "Resubscribe to mods";
             // 
             // runXCOM2ToolStripMenuItem
             // 
@@ -325,7 +338,7 @@
             this.main_tabcontrol.Location = new System.Drawing.Point(0, 27);
             this.main_tabcontrol.Name = "main_tabcontrol";
             this.main_tabcontrol.SelectedIndex = 0;
-            this.main_tabcontrol.Size = new System.Drawing.Size(984, 710);
+            this.main_tabcontrol.Size = new System.Drawing.Size(984, 689);
             this.main_tabcontrol.TabIndex = 6;
             this.main_tabcontrol.Selected += new System.Windows.Forms.TabControlEventHandler(this.MainTabSelected);
             // 
@@ -335,7 +348,7 @@
             this.modlist_tab.Location = new System.Drawing.Point(4, 23);
             this.modlist_tab.Name = "modlist_tab";
             this.modlist_tab.Padding = new System.Windows.Forms.Padding(3);
-            this.modlist_tab.Size = new System.Drawing.Size(976, 683);
+            this.modlist_tab.Size = new System.Drawing.Size(976, 662);
             this.modlist_tab.TabIndex = 0;
             this.modlist_tab.Text = "Mods";
             this.modlist_tab.UseVisualStyleBackColor = true;
@@ -356,8 +369,8 @@
             // horizontal_splitcontainer.Panel2
             // 
             this.horizontal_splitcontainer.Panel2.Controls.Add(this.modinfo_groupbox);
-            this.horizontal_splitcontainer.Size = new System.Drawing.Size(970, 677);
-            this.horizontal_splitcontainer.SplitterDistance = 435;
+            this.horizontal_splitcontainer.Size = new System.Drawing.Size(970, 656);
+            this.horizontal_splitcontainer.SplitterDistance = 414;
             this.horizontal_splitcontainer.TabIndex = 5;
             // 
             // tableLayoutPanel1
@@ -375,13 +388,15 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(970, 435);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(970, 414);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
             // modlist_ListObjectListView
             // 
+            this.modlist_ListObjectListView.AllColumns.Add(this.olvcActive);
             this.modlist_ListObjectListView.AllColumns.Add(this.olvcName);
             this.modlist_ListObjectListView.AllColumns.Add(this.olvcID);
+            this.modlist_ListObjectListView.AllColumns.Add(this.olvcCategory);
             this.modlist_ListObjectListView.AllColumns.Add(this.olvcState);
             this.modlist_ListObjectListView.AllColumns.Add(this.olvcOrder);
             this.modlist_ListObjectListView.AllColumns.Add(this.olvcSize);
@@ -392,6 +407,7 @@
             this.modlist_ListObjectListView.AllColumns.Add(this.olvcHasBackup);
             this.modlist_ListObjectListView.AllColumns.Add(this.olvcWorkshopID);
             this.modlist_ListObjectListView.AllColumns.Add(this.olvcHidden);
+            this.modlist_ListObjectListView.AllColumns.Add(this.olvcTags);
             this.modlist_ListObjectListView.AllColumns.Add(this.olvSteamLink);
             this.modlist_ListObjectListView.AllColumns.Add(this.olvBrowserLink);
             this.modlist_ListObjectListView.AllowColumnReorder = true;
@@ -400,14 +416,17 @@
             this.modlist_ListObjectListView.CheckBoxes = true;
             this.modlist_ListObjectListView.CheckedAspectName = "isActive";
             this.modlist_ListObjectListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvcActive,
             this.olvcName,
             this.olvcID,
+            this.olvcCategory,
             this.olvcState,
             this.olvcOrder,
             this.olvcSize,
             this.olvcLastUpdated,
             this.olvcHasBackup,
-            this.olvcHidden});
+            this.olvcHidden,
+            this.olvcTags});
             this.tableLayoutPanel1.SetColumnSpan(this.modlist_ListObjectListView, 3);
             this.modlist_ListObjectListView.Cursor = System.Windows.Forms.Cursors.Default;
             this.modlist_ListObjectListView.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -416,7 +435,7 @@
             this.modlist_ListObjectListView.Location = new System.Drawing.Point(3, 33);
             this.modlist_ListObjectListView.Name = "modlist_ListObjectListView";
             this.modlist_ListObjectListView.ShowItemCountOnGroups = true;
-            this.modlist_ListObjectListView.Size = new System.Drawing.Size(964, 399);
+            this.modlist_ListObjectListView.Size = new System.Drawing.Size(964, 378);
             this.modlist_ListObjectListView.SortGroupItemsByPrimaryColumn = false;
             this.modlist_ListObjectListView.TabIndex = 0;
             this.modlist_ListObjectListView.TintSortColumn = true;
@@ -434,6 +453,13 @@
             this.modlist_ListObjectListView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ModListKeyDown);
             this.modlist_ListObjectListView.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ModListKeyUp);
             // 
+            // olvcActive
+            // 
+            this.olvcActive.AspectName = "isActive";
+            this.olvcActive.Hideable = false;
+            this.olvcActive.Text = "";
+            this.olvcActive.Width = 20;
+            // 
             // olvcName
             // 
             this.olvcName.AspectName = "Name";
@@ -447,6 +473,11 @@
             this.olvcID.IsEditable = false;
             this.olvcID.Text = "ID";
             this.olvcID.Width = 200;
+            // 
+            // olvcCategory
+            // 
+            this.olvcCategory.AspectName = "Category";
+            this.olvcCategory.Text = "Category";
             // 
             // olvcState
             // 
@@ -525,6 +556,15 @@
             // 
             this.olvcHidden.AspectName = "isHidden";
             this.olvcHidden.Text = "Hidden";
+            // 
+            // olvcTags
+            // 
+            this.olvcTags.AspectName = "";
+            this.olvcTags.AutoCompleteEditor = false;
+            this.olvcTags.AutoCompleteEditorMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.olvcTags.MinimumWidth = 250;
+            this.olvcTags.Text = "Tags";
+            this.olvcTags.Width = 250;
             // 
             // olvSteamLink
             // 
@@ -822,6 +862,7 @@
             // 
             this.modinfo_inspect_propertygrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.modinfo_inspect_propertygrid.HelpVisible = false;
+            this.modinfo_inspect_propertygrid.LineColor = System.Drawing.SystemColors.ControlDark;
             this.modinfo_inspect_propertygrid.Location = new System.Drawing.Point(3, 3);
             this.modinfo_inspect_propertygrid.Name = "modinfo_inspect_propertygrid";
             this.modinfo_inspect_propertygrid.Size = new System.Drawing.Size(754, 191);
@@ -1038,7 +1079,7 @@
             this.conflicts_tab.Location = new System.Drawing.Point(4, 23);
             this.conflicts_tab.Name = "conflicts_tab";
             this.conflicts_tab.Padding = new System.Windows.Forms.Padding(3);
-            this.conflicts_tab.Size = new System.Drawing.Size(976, 683);
+            this.conflicts_tab.Size = new System.Drawing.Size(976, 662);
             this.conflicts_tab.TabIndex = 1;
             this.conflicts_tab.Text = "Class Overrides";
             this.conflicts_tab.UseVisualStyleBackColor = true;
@@ -1057,7 +1098,7 @@
             this.conflicts_tab_tableLayoutPanel.RowCount = 2;
             this.conflicts_tab_tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.conflicts_tab_tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.conflicts_tab_tableLayoutPanel.Size = new System.Drawing.Size(970, 677);
+            this.conflicts_tab_tableLayoutPanel.Size = new System.Drawing.Size(970, 656);
             this.conflicts_tab_tableLayoutPanel.TabIndex = 9;
             // 
             // conflicts_log_label
@@ -1084,7 +1125,7 @@
             this.conflicts_datagrid.Name = "conflicts_datagrid";
             this.conflicts_datagrid.ReadOnly = true;
             this.conflicts_tab_tableLayoutPanel.SetRowSpan(this.conflicts_datagrid, 2);
-            this.conflicts_datagrid.Size = new System.Drawing.Size(664, 671);
+            this.conflicts_datagrid.Size = new System.Drawing.Size(664, 650);
             this.conflicts_datagrid.TabIndex = 6;
             // 
             // ColumnModName
@@ -1118,7 +1159,7 @@
             this.conflicts_textbox.Multiline = true;
             this.conflicts_textbox.Name = "conflicts_textbox";
             this.conflicts_textbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.conflicts_textbox.Size = new System.Drawing.Size(294, 651);
+            this.conflicts_textbox.Size = new System.Drawing.Size(294, 630);
             this.conflicts_textbox.TabIndex = 7;
             // 
             // export_tab
@@ -1127,7 +1168,7 @@
             this.export_tab.Location = new System.Drawing.Point(4, 23);
             this.export_tab.Name = "export_tab";
             this.export_tab.Padding = new System.Windows.Forms.Padding(3);
-            this.export_tab.Size = new System.Drawing.Size(976, 683);
+            this.export_tab.Size = new System.Drawing.Size(976, 662);
             this.export_tab.TabIndex = 2;
             this.export_tab.Text = "Profiles";
             this.export_tab.UseVisualStyleBackColor = true;
@@ -1149,7 +1190,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(970, 677);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(970, 656);
             this.tableLayoutPanel2.TabIndex = 5;
             // 
             // export_richtextbox
@@ -1164,7 +1205,7 @@
             this.export_richtextbox.Location = new System.Drawing.Point(3, 38);
             this.export_richtextbox.Name = "export_richtextbox";
             this.export_richtextbox.ReadOnly = true;
-            this.export_richtextbox.Size = new System.Drawing.Size(964, 636);
+            this.export_richtextbox.Size = new System.Drawing.Size(964, 615);
             this.export_richtextbox.TabIndex = 2;
             this.export_richtextbox.Text = "";
             this.export_richtextbox.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.ControlLinkClicked);
@@ -1251,15 +1292,23 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.fillPanel.Location = new System.Drawing.Point(0, 27);
             this.fillPanel.Name = "fillPanel";
-            this.fillPanel.Size = new System.Drawing.Size(984, 710);
+            this.fillPanel.Size = new System.Drawing.Size(984, 689);
             this.fillPanel.TabIndex = 6;
             this.fillPanel.Visible = false;
+            // 
+            // runWarOfTheChosenToolStripMenuItem
+            // 
+            this.runWarOfTheChosenToolStripMenuItem.BackColor = System.Drawing.SystemColors.Control;
+            this.runWarOfTheChosenToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("runXCOM2ToolStripMenuItem.Image")));
+            this.runWarOfTheChosenToolStripMenuItem.Name = "runWarOfTheChosenToolStripMenuItem";
+            this.runWarOfTheChosenToolStripMenuItem.Size = new System.Drawing.Size(141, 20);
+            this.runWarOfTheChosenToolStripMenuItem.Text = "Run War of the Chosen";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(984, 762);
+            this.ClientSize = new System.Drawing.Size(984, 741);
             this.Controls.Add(this.main_statusstrip);
             this.Controls.Add(this.main_menustrip);
             this.Controls.Add(this.main_tabcontrol);
@@ -1377,6 +1426,7 @@
         private System.Windows.Forms.Button export_load_button;
         private System.Windows.Forms.ToolStripMenuItem runXCOM2ToolStripMenuItem;
         private BrightIdeasSoftware.ObjectListView modlist_ListObjectListView;
+        private BrightIdeasSoftware.OLVColumn olvcActive;
         private BrightIdeasSoftware.OLVColumn olvcName;
         private BrightIdeasSoftware.OLVColumn olvcID;
         private BrightIdeasSoftware.OLVColumn olvcState;
@@ -1415,5 +1465,9 @@
         private BrightIdeasSoftware.OLVColumn olvcHidden;
         private BrightIdeasSoftware.OLVColumn olvSteamLink;
         private BrightIdeasSoftware.OLVColumn olvBrowserLink;
+        private System.Windows.Forms.ToolStripMenuItem resubscribeToModsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem runWarOfTheChosenToolStripMenuItem;
+        private BrightIdeasSoftware.OLVColumn olvcCategory;
+        private BrightIdeasSoftware.OLVColumn olvcTags;
     }
 }

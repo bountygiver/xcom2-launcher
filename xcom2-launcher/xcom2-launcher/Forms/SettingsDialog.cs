@@ -25,6 +25,7 @@ namespace XCOM2Launcher.Forms
             searchForUpdatesCheckBox.Checked = settings.CheckForUpdates;
             showHiddenEntriesCheckBox.Checked = settings.ShowHiddenElements;
 	        autoNumberModIndexesCheckBox.Checked = settings.AutoNumberIndexes;
+            useModSpecifiedCategoriesCheckBox.Checked = settings.UseSpecifiedCategories;
 
             foreach (var modPath in settings.ModPaths)
                 modPathsListbox.Items.Add(modPath);
@@ -172,8 +173,8 @@ namespace XCOM2Launcher.Forms
             if (dialog.ShowDialog() != DialogResult.OK)
                 return;
 
-            Settings.ModPaths.Add(dialog.SelectedPath);
-            modPathsListbox.Items.Add(dialog.SelectedPath);
+            Settings.ModPaths.Add(dialog.SelectedPath + "\\");
+            modPathsListbox.Items.Add(dialog.SelectedPath + "\\");
         }
 
         private void SettingsDialog_Shown(object sender, EventArgs e)
@@ -191,6 +192,7 @@ namespace XCOM2Launcher.Forms
             Settings.CheckForUpdates = searchForUpdatesCheckBox.Checked;
             Settings.ShowHiddenElements = showHiddenEntriesCheckBox.Checked;
 	        Settings.AutoNumberIndexes = autoNumberModIndexesCheckBox.Checked;
+            Settings.UseSpecifiedCategories = useModSpecifiedCategoriesCheckBox.Checked;
 
             Settings.Arguments = argumentsTextBox.Text;
 

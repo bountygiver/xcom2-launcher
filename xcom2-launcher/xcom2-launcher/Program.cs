@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using JR.Utils.GUI.Forms;
-using Newtonsoft.Json;
 using XCOM2Launcher.Classes.Steam;
 using XCOM2Launcher.Forms;
 using XCOM2Launcher.Mod;
@@ -27,10 +27,18 @@ namespace XCOM2Launcher
 #endif
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-            if (!CheckDotNet4_6() && MessageBox.Show(@"This program requires .NET v4.6 or newer.\r\nDo you want to install it now?", @"Error", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                Process.Start(@"https://www.microsoft.com/de-de/download/details.aspx?id=49981");
-
+            
+            try
+            {
+                if (!CheckDotNet4_6() && MessageBox.Show(@"This program requires .NET v4.6 or newer.\r\nDo you want to install it now?", @"Error", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    Process.Start(@"https://www.microsoft.com/en-us/download/details.aspx?id=56115");
+            }
+            catch (Exception e)
+            {
+                if (MessageBox.Show(@"This program requires .NET v4.6 or newer.\r\nDo you want to install it now?", @"Error", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    Process.Start(@"https://www.microsoft.com/en-us/download/details.aspx?id=56115");
+            }
+            
             if (!SteamAPIWrapper.Init())
             {
                 MessageBox.Show("Please start steam first!");
@@ -52,13 +60,15 @@ namespace XCOM2Launcher
                     using (var client = new System.Net.WebClient())
                     {
                         client.Headers.Add("User-Agent: Other");
+                        var regex = new Regex("[^0-9.]");
                         var json = client.DownloadString("https://api.github.com/repos/X2CommunityCore/xcom2-launcher/releases/latest");
                         var release = Newtonsoft.Json.JsonConvert.DeserializeObject<GitHub.Release>(json);
-                        var currentVersion = GetCurrentVersion();
+                        var currentVersion = new Version(regex.Replace(GetCurrentVersion(), ""));
+                        var newVersion = new Version(regex.Replace(release.tag_name, ""));
 
-                        if (currentVersion != release.tag_name)
+                        if (currentVersion.CompareTo(newVersion) < 0)
                             // New version available
-                            new UpdateAvailableDialog(release, currentVersion).ShowDialog();
+                            new UpdateAvailableDialog(release, currentVersion.ToString()).ShowDialog();
                     }
                 }
                 catch (System.Net.WebException)
@@ -134,13 +144,28 @@ namespace XCOM2Launcher
                 MessageBox.Show(@"Could not find XCOM 2 installation path. Please fill it manually in the settings.");
 
             // Verify Mod Paths
+            var pathsToEdit = settings.ModPaths.Where(m => !m.EndsWith("\\")).ToList();
+            foreach (var modPath in pathsToEdit)
+            {
+                settings.ModPaths.Add(modPath + "\\");
+                settings.ModPaths.Remove(modPath);
+            }
+
             var oldPaths = settings.ModPaths.Where(modPath => !Directory.Exists(modPath)).ToList();
             foreach (var modPath in oldPaths)
                 settings.ModPaths.Remove(modPath);
 
             foreach (var modPath in XCOM2.DetectModDirs())
+            {
                 if (!settings.ModPaths.Contains(modPath))
-                    settings.ModPaths.Add(modPath);
+                {
+                    if (!settings.ModPaths.Contains(modPath + "\\"))
+                    {
+                        settings.ModPaths.Add(modPath);
+                    }
+                }
+
+            }
 
 
             if (settings.ModPaths.Count == 0)
@@ -160,15 +185,20 @@ namespace XCOM2Launcher
 						mod.State |= ModState.NotLoaded;
 					if (!Directory.Exists(mod.Path) || !File.Exists(mod.GetModInfoFile()))
 						mod.State |= ModState.NotInstalled;
+	                // tags clean up
+	                mod.Tags = mod.Tags.Where(t => settings.Tags.ContainsKey(t)).ToList();
 	            }
 
-	            var brokenMods = settings.Mods.All.Where(m => m.State == ModState.NotLoaded || m.State == ModState.NotInstalled).ToList();
-                if (brokenMods.Count > 0)
+                var newlyBrokenMods = settings.Mods.All.Where(m => (m.State == ModState.NotLoaded || m.State == ModState.NotInstalled) && !m.isHidden).ToList();
+                if (newlyBrokenMods.Count > 0)
                 {
-					FlexibleMessageBox.Show($"{brokenMods.Count} mods no longer exists and have been hidden:\r\n\r\n" + string.Join("\r\n", brokenMods.Select(m => m.Name)));
+                    if (newlyBrokenMods.Count == 1)
+                        FlexibleMessageBox.Show($"The mod '{newlyBrokenMods[0].Name}' no longer exists and has been hidden.");
+                    else
+                        FlexibleMessageBox.Show($"{newlyBrokenMods.Count} mods no longer exist and have been hidden:\r\n\r\n" + string.Join("\r\n", newlyBrokenMods.Select(m => m.Name)));
 
-	                foreach (var m in brokenMods)
-		                m.isHidden = true;
+                    foreach (var m in newlyBrokenMods)
+                        m.isHidden = true;
 						//settings.Mods.RemoveMod(m);
 				}
             }

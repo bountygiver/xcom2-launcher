@@ -65,7 +65,13 @@ namespace XCOM2Launcher
 
 	    public bool AutoNumberIndexes { get; set; } = true;
 
+        public bool UseSpecifiedCategories { get; set; } = true;
+
+        public bool LastLaunchedWotC { get; set; } = false;
+
         public ModList Mods { get; set; } = new ModList();
+
+        public Dictionary<string, ModTag> Tags { get; set; } = new Dictionary<string, ModTag>();
 
 		/// <summary>
 		/// Mod ID

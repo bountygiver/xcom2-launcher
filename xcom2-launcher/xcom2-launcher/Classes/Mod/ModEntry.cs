@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -8,7 +9,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
-using XCOM2Launcher.Forms;
 using FilePath = System.IO.Path;
 
 namespace XCOM2Launcher.Mod
@@ -35,30 +35,9 @@ namespace XCOM2Launcher.Mod
         public string Author { get; set; } = "Unknown";
 	    public string Description { get; set; } = "";
 
-	    public string Path
-	    {
-		    get
-			{
-				string path = "";
-				if (Source == ModSource.SteamWorkshop)
-				{
-					foreach (var modPath in XCOM2Launcher.Settings.Instance.ModPaths)
-					{
-						if (modPath.Contains("workshop"))
-							path = modPath;
-					}
-					return FilePath.Combine(path, WorkshopID.ToString());
-				}
-				foreach (var modPath in XCOM2Launcher.Settings.Instance.ModPaths)
-				{
-					if (modPath.Contains("XcomGame"))
-						path = modPath;
-				}
-				return FilePath.Combine(path, ID);
-			}
-	    }
+	    public string Path { get; set; } = "";
 
-	    /// <summary>
+        /// <summary>
         ///     Size in bytes
         /// </summary>
         [DefaultValue(-1)]
@@ -95,6 +74,8 @@ namespace XCOM2Launcher.Mod
 
 	    [JsonIgnore]
 	    public string BrowserLink => GetWorkshopLink();
+
+        public IList<string> Tags { get; set; } = new List<string>();
 
 
 		#region Mod

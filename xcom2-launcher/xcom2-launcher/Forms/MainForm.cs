@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Steamworks;
@@ -29,6 +29,9 @@ namespace XCOM2Launcher.Forms
             // Restore states 
             showHiddenModsToolStripMenuItem.Checked = settings.ShowHiddenElements;
 
+            // Hide WotC button if necessary
+            runWarOfTheChosenToolStripMenuItem.Visible = Directory.Exists(settings.GamePath + @"\XCom2-WarOfTheChosen");
+
             // Init interface
             InitObjectListView();
             UpdateInterface();
@@ -42,16 +45,22 @@ namespace XCOM2Launcher.Forms
 			CheckSteamForUpdates();
 #endif
 
+            // Run callbacks
+            var t1 = new Timer();
+            t1.Tick += (sender, e) => { SteamAPIWrapper.RunCallbacks(); };
+            t1.Interval = 10;
+            t1.Start();
+
             // Check for running downloads
 #if DEBUG
             if (Settings.GetWorkshopPath() != null)
             {
                 CheckSteamForNewMods();
 
-                var t = new Timer();
-                t.Tick += (sender, e) => { CheckSteamForNewMods(); };
-                t.Interval = 30000;
-                t.Start();
+                var t2 = new Timer();
+                t2.Tick += (sender, e) => { CheckSteamForNewMods(); };
+                t2.Interval = 30000;
+                t2.Start();
             }
 #endif
         }
@@ -149,7 +158,8 @@ namespace XCOM2Launcher.Forms
 
 			var nameLength = showAllMods ? Mods.All.Max(m => m.Name.Length) : Mods.Active.Max(m => m.Name.Length);
 			var idLength = showAllMods ? Mods.All.Max(m => m.ID.Length) : Mods.Active.Max(m => m.ID.Length);
-			
+            var workshopIDLength = showAllMods ? Mods.All.Max(m => m.WorkshopID.ToString().Length) : Mods.Active.Max(m => m.WorkshopID.ToString().Length);
+
 
             foreach (var entry in Mods.Entries.Where(e => e.Value.Entries.Any(m => m.isActive)))
             {
@@ -177,13 +187,13 @@ namespace XCOM2Launcher.Forms
                         str.Append("Unknown");
 
                     else if (showLink)
-                        str.Append(mod.GetWorkshopLink());
+                        str.Append(string.Format("{0,-" + workshopIDLength + "} ", mod.GetWorkshopLink()));
 
                     else
-                        str.Append(mod.WorkshopID.ToString());
-	                //str.Append("\t");
+                        str.Append(string.Format("{0,-" + workshopIDLength + "} ", mod.WorkshopID));
+	                str.Append("\t");
 
-	                //str.Append(mod.isActive);
+                    str.Append(string.Join(";", mod.Tags));
 
                     str.AppendLine();
                 }
@@ -215,16 +225,17 @@ namespace XCOM2Launcher.Forms
             //RefreshModList();
         }
 
-        private void Save()
+        private void Save(bool WotC)
         {
-            XCOM2.SaveChanges(Settings);
+            XCOM2.SaveChanges(Settings, WotC);
             Settings.SaveFile("settings.json");
         }
 
         private void RunGame()
         {
             _updateWorker.CancelAsync();
-            Save();
+            Settings.Instance.LastLaunchedWotC = false;
+            Save(false);
 
             XCOM2.RunGame(Settings.GamePath, Settings.Arguments.ToString());
 
@@ -232,10 +243,22 @@ namespace XCOM2Launcher.Forms
                 Close();
         }
 
-		#endregion
+        private void RunWotC()
+        {
+            _updateWorker.CancelAsync();
+            Settings.Instance.LastLaunchedWotC = true;
+            Save(true);
+
+            XCOM2.RunWotC(Settings.GamePath, Settings.Arguments.ToString());
+
+            if (Settings.CloseAfterLaunch)
+                Close();
+        }
+
+        #endregion
 
 
-		#region Interface updates
+        #region Interface updates
 
         private void UpdateInterface()
         {

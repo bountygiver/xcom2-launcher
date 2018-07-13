@@ -24,8 +24,9 @@ namespace XCOM2Launcher.Forms
 		internal void RegisterEvents()
         {
             // Register Events
-            // run button
+            // run buttons
             runXCOM2ToolStripMenuItem.Click += (a, b) => { RunGame(); };
+            runWarOfTheChosenToolStripMenuItem.Click += (a, b) => { RunWotC(); };
 
             // save on close
             //Shown += MainForm_Shown;
@@ -33,7 +34,7 @@ namespace XCOM2Launcher.Forms
 
             // Menu
             // -> File
-            saveToolStripMenuItem.Click += delegate { Save(); };
+            saveToolStripMenuItem.Click += delegate { Save(Settings.Instance.LastLaunchedWotC); };
             reloadToolStripMenuItem.Click += delegate
             {
                 // Confirmation dialog
@@ -77,6 +78,29 @@ namespace XCOM2Launcher.Forms
                 RefreshModList();
             };
 
+            resubscribeToModsToolStripMenuItem.Click += delegate
+            {
+                var modsToDownload = Mods.All.Where(m => m.State.HasFlag(ModState.NotInstalled) && m.Source == ModSource.SteamWorkshop).ToList();
+                var choice = false;
+
+                if (modsToDownload.Count == 0)
+                    MessageBox.Show("No uninstalled workshop mods were found.");
+                else if (modsToDownload.Count == 1)
+                    choice = MessageBox.Show($"Are you sure you want to download the mod {modsToDownload[0].Name}?", "Confirm Download", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.OK;
+                else
+                    choice = MessageBox.Show($"Are you sure you want to download {modsToDownload.Count} mods?", "Confirm Download", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.OK;
+                
+                if (choice)
+                {
+                    foreach (var m in modsToDownload)
+                    {
+                        Workshop.Subscribe((ulong)m.WorkshopID);
+                        Workshop.DownloadItem((ulong)m.WorkshopID);
+                    }
+                    MessageBox.Show("Launch XCOM 2 after the download is finished in order to use the mod" + (modsToDownload.Count == 1 ? "." : "s."));
+                }
+            };
+
             // RichTextBox clickable links
             //modinfo_readme_RichTextBox.LinkClicked += ControlLinkClicked;
             //modinfo_info_DescriptionRichTextBox.LinkClicked += ControlLinkClicked;
@@ -93,6 +117,8 @@ namespace XCOM2Launcher.Forms
             _updateWorker.RunWorkerCompleted += Updater_RunWorkerCompleted;
 
             // Steam Events
+            Workshop.OnItemDownloaded += Resubscribe_OnItemDownloaded;
+
 #if DEBUG
             Workshop.OnItemDownloaded += SteamWorkshop_OnItemDownloaded;
 #endif
@@ -103,6 +129,17 @@ namespace XCOM2Launcher.Forms
             export_group_checkbox.CheckedChanged += ExportCheckboxCheckedChanged;
             export_save_button.Click += ExportSaveButtonClick;
             export_load_button.Click += ExportLoadButtonClick;
+        }
+
+        private void Resubscribe_OnItemDownloaded(object sender, Workshop.DownloadItemEventArgs e)
+        {
+            var mod = Mods.All.SingleOrDefault(m => m.WorkshopID == (long)e.Result.m_nPublishedFileId.m_PublishedFileId);
+
+            if (mod.State == ModState.NotInstalled && e.Result.m_eResult == EResult.k_EResultOK)
+            {
+                mod.State &= ~ModState.NotInstalled;
+                RefreshModList();
+            }
         }
 
 #if DEBUG
@@ -165,7 +202,7 @@ namespace XCOM2Launcher.Forms
             // Save dimensions
             Settings.Windows["main"] = new WindowSettings(this) { Data = modlist_ListObjectListView.SaveState() };
 
-            Save();
+            Save(Settings.Instance.LastLaunchedWotC);
         }
 
         // Make sure property grid columns are properly sized
@@ -266,7 +303,7 @@ namespace XCOM2Launcher.Forms
             // parse file
 
 			var categoryRegex = new Regex(@"^(?<category>.*?)\s\(\d*\):$", RegexOptions.Compiled | RegexOptions.Multiline);
-            var modEntryRegex = new Regex(@"^\s*(?<name>.*?)[ ]*\t(?<id>.*?)[ ]*\t(?:.*=)?(?<sourceID>\d+)([ ]*\t(?<active>.*?))?$", RegexOptions.Compiled | RegexOptions.Multiline);
+            var modEntryRegex = new Regex(@"^\s*(?<name>.*?)[ ]*\t(?<id>.*?)[ ]*\t(?:.*=)?(?<sourceID>\d+)([ ]*\t(?<tags>.*?))?$", RegexOptions.Compiled | RegexOptions.Multiline);
 
             var mods = Mods.All.ToList();
             var activeMods = new List<ModEntry>();
@@ -307,8 +344,19 @@ namespace XCOM2Launcher.Forms
 
                 activeMods.AddRange(entries);
 
+                var tags = modMatch.Groups["tags"].Value.Split(';');
+
+                foreach (var tag in tags)
+                {
+                    if (AvailableTags.ContainsKey(tag) == false)
+                    {
+                        AvailableTags[tag] = new ModTag(tag);
+                    }
+                }
+
 	            foreach (var modEntry in entries)
 	            {
+	                modEntry.Tags = tags.ToList();
 		            Mods.RemoveMod(modEntry);
 					Mods.AddMod(categoryName, modEntry);
 		            //modEntry.isActive = active;

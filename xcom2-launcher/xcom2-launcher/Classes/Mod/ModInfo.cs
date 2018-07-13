@@ -79,10 +79,10 @@ namespace XCOM2Launcher.Mod
                 }
             }
 
+            if (values.ContainsKey("title"))
+                Title = values["title"];
 
-            Title = values["title"];
-
-            if (values.ContainsKey("category") && values["category"].Length > 0)
+            if (Settings.Instance.UseSpecifiedCategories && values.ContainsKey("category") && values["category"].Length > 0)
                 Category = values["category"];
 
             try
