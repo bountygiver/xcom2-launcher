@@ -77,6 +77,8 @@ namespace XCOM2Launcher.Mod
 
         public IList<string> Tags { get; set; } = new List<string>();
 
+        public bool BuiltForWOTC { get; set; } = false;
+
 
 		#region Mod
 
